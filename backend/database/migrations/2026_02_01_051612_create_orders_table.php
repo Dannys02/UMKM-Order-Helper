@@ -18,7 +18,7 @@ return new class extends Migration {
         ->constrained()
         ->onDelete("cascade");
       $table->integer("quantity");
-      $table->text("note")->nullable();
+      $table->text("note");
       $table->timestamps();
     });
   }
