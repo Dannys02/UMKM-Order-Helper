@@ -10,13 +10,23 @@ class OrderController extends Controller
 {
   public function store(Request $request)
   {
-    return Order::create($request->all());
+    $order = Order::create([
+      "user_id" => auth()->id(),
+      "total_price" => $request->total_price,
+      "status" => "pending",
+    ]);
+
+    foreach ($request->items as $item) {
+      $order->items()->create($item);
+    }
+
+    return $order;
   }
 
-  public function index()
+  public function approve($id)
   {
-    return Order::with("product")
-      ->latest()
-      ->get();
+    $order = Order::findOrFail($id);
+    $order->update(["status" => "approved"]);
+    return $order;
   }
 }

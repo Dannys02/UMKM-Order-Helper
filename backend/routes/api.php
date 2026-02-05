@@ -5,12 +5,14 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\OrderController;
 
-Route::get("/user", function (Request $request) {
-  return $request->user();
-})->middleware("auth:sanctum");
+Route::post("/login", [AuthController::class, "login"]);
 
-Route::get("/products", [ProductController::class, "index"]);
-Route::post("/products/store", [ProductController::class, "store"]);
+Route::middleware("auth:sanctum")->group(function () {
+  Route::get("/products", [ProductController::class, "index"]);
+  Route::post("/products", [ProductController::class, "store"]);
+  Route::put("/products/{id}", [ProductController::class, "update"]);
+  Route::delete("/products/{id}", [ProductController::class, "destroy"]);
 
-Route::post("/orders/store", [OrderController::class, "store"]);
-Route::get("/orders", [OrderController::class, "index"]);
+  Route::post("/orders", [OrderController::class, "store"]);
+  Route::post("/orders/{id}/approve", [OrderController::class, "approve"]);
+});
